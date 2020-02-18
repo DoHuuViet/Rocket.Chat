@@ -36,9 +36,9 @@ BlazeLayout.setRoot('body');
 
 const createTemplateForComponent = async (
 	component,
-	props = {},
+	{ style, ...props } = {},
 	// eslint-disable-next-line new-cap
-	renderContainerView = () => HTML.DIV({ style: 'overflow: hidden; flex: 1 1 auto; height: 1%;' }),
+	renderContainerView = () => HTML.DIV({ style }),
 ) => {
 	const name = component.displayName || component.name;
 
@@ -233,19 +233,20 @@ FlowRouter.route('/setup-wizard/:step?', {
 	},
 });
 
+const style = 'overflow: hidden; flex: 1 1 auto; height: 1%;';
 FlowRouter.route('/admin/:group?', {
 	name: 'admin',
 	action: async ({ group = 'info' } = {}) => {
 		switch (group) {
 			case 'info': {
 				const { InformationRoute } = await import('./components/admin/info/InformationRoute');
-				BlazeLayout.render('main', { center: await createTemplateForComponent(InformationRoute) });
+				BlazeLayout.render('main', { center: await createTemplateForComponent(InformationRoute, { style }) });
 				break;
 			}
 
 			default: {
 				const { SettingsRoute } = await import('./components/admin/settings/SettingsRoute');
-				BlazeLayout.render('main', { center: await createTemplateForComponent(SettingsRoute, { group }) });
+				BlazeLayout.render('main', { center: await createTemplateForComponent(SettingsRoute, { group, style }) });
 				// BlazeLayout.render('main', { center: 'admin' });
 			}
 		}
